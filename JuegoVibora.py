@@ -56,6 +56,11 @@ def inside(head):
     return -200 < head.x < 190 and -200 < head.y < 190
 
 
+def insideFood(food):
+    "Return True if food inside boundaries."
+    return -200 < food.x < 190 and -200< food.y < 190
+
+
 def move():
     "Move snake forward one segment."
     head = snake[-1].copy()
