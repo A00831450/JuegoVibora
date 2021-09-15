@@ -9,7 +9,7 @@ Exercises
 
 """
 
-from random import randrange
+from random import *
 from turtle import *
 
 from freegames import square, vector
@@ -19,6 +19,7 @@ snake = [vector(10, 0)]
 aim = vector(0, -10)
 clr = randrange(1, 5)
 clrf = randrange(1, 5)
+foodNewPos = vector(0, -10)
     
 def color():
     if clr == 1:
@@ -43,18 +44,25 @@ def colorf():
         return "blue"
     else:
         return "cyan"
-        
+    
+def changeFood():
+    direction = [10, -10]
+    foodNewPos.x = choice(direction)
+    foodNewPos.y = choice(direction)
+    return foodNewPos
 
 def change(x, y):
     "Change snake direction."
     aim.x = x
     aim.y = y
-
-
+    
 def inside(head):
     "Return True if head inside boundaries."
     return -200 < head.x < 190 and -200 < head.y < 190
 
+def insideFood(food):
+    "Return True if food inside boundaries."
+    return -200 < food.x < 190 and -200< food.y < 190
 
 def insideFood(food):
     "Return True if food inside boundaries."
@@ -65,11 +73,16 @@ def move():
     "Move snake forward one segment."
     head = snake[-1].copy()
     head.move(aim)
-
+    food.move(changeFood())
+    
     if not inside(head) or head in snake:
         square(head.x, head.y, 9, 'red')
         update()
         return
+    if not insideFood(food):
+        food.x = randrange(-15, 15) * 10
+        food.y = randrange(-15, 15) * 10
+        
     snake.append(head)
 
     if head == food:
@@ -83,7 +96,7 @@ def move():
 
     for body in snake:
         square(body.x, body.y, 9, color())
-
+        
     square(food.x, food.y, 9, colorf())
     update()
     ontimer(move, 100)
